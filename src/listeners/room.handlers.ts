@@ -22,13 +22,14 @@ export default function (
             socketId: socket.id,
             players: [],
             status: "waiting",
+            currentQuestion: -1,
         });
 
         console.log(rooms);
 
         // emitir al cliente el código de la sala
-        socket.emit("room-created", codeGenerated);
+        socket.emit("room:created", codeGenerated);
     };
 
-    socket.on("create-room", createRoom);
+    socket.on("room:create", createRoom);
 }
