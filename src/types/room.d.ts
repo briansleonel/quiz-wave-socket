@@ -6,4 +6,5 @@ export interface Room {
     code: number;
     players: Array<Player>;
     status: StatusRoom;
+    currentQuestion: number;
 }
