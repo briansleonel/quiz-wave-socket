@@ -1,4 +1,4 @@
-import { Socket, Server as SocketServer } from "socket.io";
+import { Server as SocketServer } from "socket.io";
 import { Server as HttpServer } from "http";
 import {
     ClientEvents,
@@ -8,6 +8,7 @@ import {
 } from "./types/events";
 import { Room } from "./types/room";
 import roomHandlers from "./listeners/room.handlers";
+import playerHandlers from "./listeners/player.handlers";
 
 export default function createSocketAplication(
     server: HttpServer,
@@ -27,6 +28,7 @@ export default function createSocketAplication(
 
         // eventos para las salas
         roomHandlers(socket, rooms);
+        playerHandlers(socket, rooms);
 
         socket.on("disconnect", () => {
             console.log("Client disconnected: " + socket.id);
