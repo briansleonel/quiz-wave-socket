@@ -25,6 +25,8 @@ export default function (
             currentQuestion: -1,
         });
 
+        socket.data = { code: codeGenerated, role: "moderator" };
+
         console.log(rooms);
 
         // emitir al cliente el código de la sala
