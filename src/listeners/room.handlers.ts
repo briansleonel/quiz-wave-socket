@@ -31,5 +31,22 @@ export default function (
         socket.emit("room:created", codeGenerated);
     };
 
+    const checkRoomExists = (code: number) => {
+        // busco la sala de acuerdo al codigo recibido
+        const roomFound = rooms.find((r) => r.code == code);
+
+        // verifico que se halla encontrado una sala
+        if (roomFound) {
+            socket.emit("room:room-exists", true);
+        } else {
+            socket.emit("room:room-exists", false);
+            socket.emit(
+                "room:error",
+                "Sala no encontrada, verifique el código"
+            );
+        }
+    };
+
     socket.on("room:create", createRoom);
+    socket.on("room:check-exists", checkRoomExists);
 }
