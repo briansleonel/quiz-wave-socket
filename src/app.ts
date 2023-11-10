@@ -9,6 +9,7 @@ import {
 import { Room } from "./types/room";
 import roomHandlers from "./listeners/room.handlers";
 import playerHandlers from "./listeners/player.handlers";
+import gameHandlers from "./listeners/game.handlers";
 
 export default function createSocketAplication(
     server: HttpServer,
@@ -29,6 +30,7 @@ export default function createSocketAplication(
         // eventos para las salas
         roomHandlers(socket, rooms);
         playerHandlers(socket, rooms);
+        gameHandlers(socket, rooms);
 
         socket.on("disconnect", () => {
             console.log("Client disconnected: " + socket.id);
