@@ -9,10 +9,12 @@ export interface ServerEvents {
     "room:created": (code: number) => void;
     "player:joined-room": (player: Player) => void;
     "room:join-player": (player: Player) => void;
+    "player:adds-name": (player: Player) => void;
 }
 
 export interface ClientEvents {
     hello: () => void;
     "room:create": () => void;
     "player:join-room": (code: number) => void;
+    "player:add-name": (player: Player, code: number) => void;
 }
