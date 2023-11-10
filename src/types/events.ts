@@ -2,7 +2,10 @@ import { Player } from "./player";
 
 export interface InterServerEvents {}
 
-export interface SocketData {}
+export interface SocketData {
+    code: number;
+    role: "moderator" | "player";
+}
 
 export interface ServerEvents {
     response: (message: string) => void;
@@ -11,6 +14,7 @@ export interface ServerEvents {
     "room:error": (message: string) => void;
     "room:room-exists": (exists: boolean) => void;
     "player:joined-room": (player: Player) => void;
+    "quiz:started": () => void;
 }
 
 export interface ClientEvents {
@@ -18,4 +22,5 @@ export interface ClientEvents {
     "room:create": () => void;
     "room:check-exists": (code: number) => void;
     "player:join-room": (code: number, playername: string) => void;
+    "quiz:start": () => void;
 }
