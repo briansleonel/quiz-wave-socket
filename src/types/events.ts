@@ -7,8 +7,9 @@ export interface SocketData {}
 export interface ServerEvents {
     response: (message: string) => void;
     "room:created": (code: number) => void;
-    "player:joined-room": (player: Player) => void;
     "room:join-player": (player: Player) => void;
+    "room:error": (message: string) => void;
+    "player:joined-room": (player: Player) => void;
     "player:adds-name": (player: Player) => void;
 }
 

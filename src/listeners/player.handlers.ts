@@ -29,18 +29,28 @@ export default function (
         // busco la sala de acuerdo al codigo
         const roomFound = rooms.find((r) => r.code == code);
 
-        // verifico que se halla encontrado una sala y el estado sea "waiting"
-        if (roomFound && roomFound.status === "waiting") {
-            console.log("Socket player: " + socket.id);
-            console.log("Code room: " + code);
+        // verifico que se halla encontrado una sala
+        if (roomFound) {
+            // verifico que el estado sea "waiting"
+            if (roomFound.status === "waiting") {
+                console.log("Socket player: " + socket.id);
+                console.log("Code room: " + code);
 
-            roomFound.players = [...roomFound.players, player];
+                roomFound.players = [...roomFound.players, player];
 
-            // envió al cliente moderador los datos del jugador que se unió
-            socket.to(roomFound.socketId).emit("room:join-player", player);
+                // envió al cliente moderador los datos del jugador que se unió
+                socket.to(roomFound.socketId).emit("room:join-player", player);
 
-            // envío al cliente jugador sus datos
-            socket.emit("player:joined-room", player);
+                // envío al cliente jugador sus datos
+                socket.emit("player:joined-room", player);
+            } else {
+                socket.emit("room:error", "No se puede ingresar a la sala");
+            }
+        } else {
+            socket.emit(
+                "room:error",
+                "Sala no encontrada, verifique el código"
+            );
         }
     };
 
