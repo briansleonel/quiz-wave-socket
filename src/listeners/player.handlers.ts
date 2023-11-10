@@ -31,6 +31,8 @@ export default function (
                 score: 0,
             };
 
+            socket.data = { code, role: "player" };
+
             roomFound.players.push(player); // agrego el nuevo jugador
 
             // envió al cliente moderador los datos del jugador que se unió
