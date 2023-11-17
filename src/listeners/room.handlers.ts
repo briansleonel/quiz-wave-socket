@@ -7,12 +7,13 @@ import {
 import { getRandomNumber } from "../libs/generateRandomNumber";
 import { Room } from "../types/room";
 import { Socket } from "socket.io";
+import { ICollectionQuestion } from "../types/collectionQuestion";
 
 export default function (
     socket: Socket<ClientEvents, ServerEvents, InterServerEvents, SocketData>,
     rooms: Array<Room>
 ) {
-    const createRoom = () => {
+    const createRoom = (questions: Array<ICollectionQuestion>) => {
         // generar el código de la sala
         const codeGenerated = getRandomNumber(100000, 999999);
 
@@ -23,6 +24,7 @@ export default function (
             players: [],
             status: "waiting",
             currentQuestion: -1,
+            questions,
         });
 
         socket.data = { code: codeGenerated, role: "moderator" };
