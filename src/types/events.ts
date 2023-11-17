@@ -11,7 +11,7 @@ export interface SocketData {
 
 export interface ServerEvents {
     response: (message: string) => void;
-    "room:created": (code: number) => void;
+    "room:created": (code: number, socketId: string) => void;
     "room:join-player": (player: Player) => void;
     "room:error": (message: string) => void;
     "room:room-exists": (exists: boolean) => void;

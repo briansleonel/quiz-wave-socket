@@ -32,7 +32,7 @@ export default function (
         console.log(rooms);
 
         // emitir al cliente el código de la sala
-        socket.emit("room:created", codeGenerated);
+        socket.emit("room:created", codeGenerated, socket.id);
     };
 
     const checkRoomExists = (code: number) => {
