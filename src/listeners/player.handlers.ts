@@ -31,7 +31,7 @@ export default function (
                 score: 0,
             };
 
-            socket.data = { code, role: "player" };
+            socket.data = { code, role: "player", playername };
 
             roomFound.players.push(player); // agrego el nuevo jugador
 

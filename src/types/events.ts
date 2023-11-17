@@ -6,6 +6,7 @@ export interface InterServerEvents {}
 export interface SocketData {
     code: number;
     role: "moderator" | "player";
+    playername?: string;
 }
 
 export interface ServerEvents {
