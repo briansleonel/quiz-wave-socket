@@ -1,3 +1,4 @@
+import { ICollectionQuestion } from "./collectionQuestion";
 import { Player } from "./player";
 
 export interface InterServerEvents {}
@@ -20,7 +21,7 @@ export interface ServerEvents {
 
 export interface ClientEvents {
     hello: () => void;
-    "room:create": () => void;
+    "room:create": (questions: Array<ICollectionQuestion>) => void;
     "room:check-exists": (code: number) => void;
     "player:join-room": (code: number, playername: string) => void;
     "quiz:start": () => void;
