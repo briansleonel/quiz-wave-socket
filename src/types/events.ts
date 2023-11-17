@@ -13,6 +13,7 @@ export interface ServerEvents {
     "room:join-player": (player: Player) => void;
     "room:error": (message: string) => void;
     "room:room-exists": (exists: boolean) => void;
+    "room:player-disconnected": (player: Player) => void;
     "player:joined-room": (player: Player) => void;
     "quiz:started": () => void;
 }

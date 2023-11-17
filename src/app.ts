@@ -23,6 +23,7 @@ export default function createSocketAplication(
     >(server, { cors: { origin: "*" } });
 
     io.on("connect", (socket) => {
+        console.log("Client connected: " + socket.id);
         socket.on("hello", () => {
             socket.emit("response", "Hola desde el servidor");
         });
@@ -34,6 +35,35 @@ export default function createSocketAplication(
 
         socket.on("disconnect", () => {
             console.log("Client disconnected: " + socket.id);
+            // Busco el la sala en la que se encuentra un jugador que se desconecto, de acuero al codigo de sala en socket.data
+            const roomFound = rooms.find(
+                (room) =>
+                    room.code === socket.data.code &&
+                    socket.data.role === "player"
+            );
+
+            // Verifico si se encontró la sala
+            if (roomFound) {
+                // busco el jugador que se desconecto
+                const playerDisconnected = roomFound.players.find(
+                    (player) => player.socketId === socket.id
+                );
+
+                if (playerDisconnected) {
+                    // filtro los jugadores de la sala quitanod el jugador que se desconecto
+                    const playersUpdated = roomFound.players.filter(
+                        (player) => player !== playerDisconnected
+                    );
+
+                    // actualizo la lista de jugadores de la sala
+                    roomFound.players = playersUpdated;
+
+                    // emito al moderador de la sala el jugador que se desconectó
+                    socket
+                        .to(roomFound.socketId)
+                        .emit("room:player-disconnected", playerDisconnected);
+                }
+            }
         });
     });
 
