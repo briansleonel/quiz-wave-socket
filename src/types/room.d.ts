@@ -9,4 +9,5 @@ export interface Room {
     status: StatusRoom;
     currentQuestion: number;
     questions: Array<ICollectionQuestion>;
+    hasNext: false;
 }

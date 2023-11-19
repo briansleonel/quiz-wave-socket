@@ -25,6 +25,7 @@ export default function (
             status: "waiting",
             currentQuestion: -1,
             questions,
+            hasNext: false,
         });
 
         socket.data = { code: codeGenerated, role: "moderator" };
