@@ -21,6 +21,7 @@ export interface ServerEvents {
     "quiz:show-question": (question: string) => void;
     "quiz:show-options": (options: Array<string>) => void;
     "quiz:countdown": (count: number) => void;
+    "quiz:countdown-stopped": () => void;
 }
 
 export interface ClientEvents {
@@ -32,6 +33,7 @@ export interface ClientEvents {
     "quiz:show-question": () => void;
     "quiz:show-options": () => void;
     "quiz:countdown": (count: number) => void;
+    "quiz:stop-countdown": () => void;
 }
 
 /**

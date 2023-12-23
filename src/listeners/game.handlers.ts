@@ -95,8 +95,21 @@ export default function (
         }
     };
 
+    const stopCountdown = () => {
+        const roomFound = rooms.find((r) => r.code == socket.data.code);
+
+        // verifico que se encuentre la sala
+        if (roomFound && socket.data.role === "moderator") {
+            // emito el evento que se ha iniciado el juego a todos los jugadores
+            roomFound.players.forEach((p) => {
+                socket.to(p.socketId).emit("quiz:countdown-stopped");
+            });
+        }
+    };
+
     socket.on("quiz:start", startGame);
     socket.on("quiz:show-question", quizShowQuestion);
     socket.on("quiz:show-options", quizShowOptions);
     socket.on("quiz:countdown", changeCountdown);
+    socket.on("quiz:stop-countdown", stopCountdown);
 }
