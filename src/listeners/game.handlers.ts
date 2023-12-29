@@ -23,6 +23,8 @@ export default function (
         if (roomFound && socket.data.role === "moderator") {
             roomFound.status = "started"; // etsablezco el estado de la sala en "started"
             roomFound.currentQuestion = 0;
+            roomFound.hasNext =
+                roomFound.questions.length < roomFound.currentQuestion + 1;
 
             // emito el evento que se ha iniciado el juego a todos los jugadores
             roomFound.players.forEach((p) => {
@@ -95,6 +97,9 @@ export default function (
         }
     };
 
+    /**
+     * Permite escuchar el evento cuando se finaliza la cuenta regresiva en el cliente del moderador, y es emitido a todos los jugadores conectados
+     */
     const stopCountdown = () => {
         const roomFound = rooms.find((r) => r.code == socket.data.code);
 
@@ -107,9 +112,36 @@ export default function (
         }
     };
 
+    /**
+     * Permite esuchar el evento cuando un jugador selecciona una opción de todas las disponibles, y se almacena dentro de sus datos del jugador
+     * @param index indice de la opción seleccionada
+     */
+    const sendAnswerPlayer = (index: number) => {
+        const roomFound = rooms.find((r) => r.code == socket.data.code);
+
+        // verifico que se encuentre la sala
+        if (roomFound && socket.data.role === "player") {
+            const currentQuestion =
+                roomFound.questions[roomFound.currentQuestion];
+
+            // recorro el array de jugadores y busco el que coincida con el jugador que realiza la acción
+            roomFound.players.every((p) => {
+                if (p.socketId === socket.id) {
+                    // verifico si la opción seleccionada es correcta o no y la guardo entre sus respuestas
+                    p.answers.push(currentQuestion.correct === index);
+                    return false;
+                }
+                return true;
+            });
+
+            console.log(roomFound.players);
+        }
+    };
+
     socket.on("quiz:start", startGame);
     socket.on("quiz:show-question", quizShowQuestion);
     socket.on("quiz:show-options", quizShowOptions);
     socket.on("quiz:countdown", changeCountdown);
     socket.on("quiz:stop-countdown", stopCountdown);
+    socket.on("quiz-player:send-answer", sendAnswerPlayer);
 }
