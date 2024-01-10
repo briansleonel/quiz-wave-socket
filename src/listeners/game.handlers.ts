@@ -105,10 +105,12 @@ export default function (
 
         // verifico que se encuentre la sala
         if (roomFound && socket.data.role === "moderator") {
-            // emito el evento que se ha iniciado el juego a todos los jugadores
+            // emito el evento que se ha finalizado el contador a todos los jugadores
             roomFound.players.forEach((p) => {
                 socket.to(p.socketId).emit("quiz:countdown-stopped");
             });
+
+            socket.emit("quiz:ranking-moderator", roomFound.players);
         }
     };
 
@@ -116,7 +118,7 @@ export default function (
      * Permite esuchar el evento cuando un jugador selecciona una opción de todas las disponibles, y se almacena dentro de sus datos del jugador
      * @param index indice de la opción seleccionada
      */
-    const sendAnswerPlayer = (index: number) => {
+    const sendAnswerPlayer = (index: number, countown: number) => {
         const roomFound = rooms.find((r) => r.code == socket.data.code);
 
         // verifico que se encuentre la sala
@@ -129,6 +131,11 @@ export default function (
                 if (p.socketId === socket.id) {
                     // verifico si la opción seleccionada es correcta o no y la guardo entre sus respuestas
                     p.answers.push(currentQuestion.correct === index);
+
+                    // verifico que si la opcion es correcta para asignar los puntos correspondientes
+                    if (currentQuestion.correct === index) {
+                        p.score += countown;
+                    }
                     return false;
                 }
                 return true;
