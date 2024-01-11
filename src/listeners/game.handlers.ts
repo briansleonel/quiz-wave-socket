@@ -110,6 +110,11 @@ export default function (
                 socket.to(p.socketId).emit("quiz:countdown-stopped");
             });
 
+            // Ordeno los jugadores de forma descendente de acuerdo a su SCORE
+            roomFound.players.sort((a, b) =>
+                a.score < b.score ? 1 : a.score > b.score ? -1 : 0
+            );
+
             socket.emit("quiz:ranking-moderator", roomFound.players);
         }
     };
@@ -140,8 +145,20 @@ export default function (
                 }
                 return true;
             });
+        }
+    };
 
-            console.log(roomFound.players);
+    /**
+     * Permite escuchar el evento cuando el moderator indica que puede mostrar su score a cada participante
+     */
+    const showRankingPlayer = () => {
+        const roomFound = rooms.find((r) => r.code == socket.data.code);
+
+        // verifico que se encuentre la sala
+        if (roomFound && socket.data.role === "moderator") {
+            roomFound.players.forEach((p) => {
+                socket.to(p.socketId).emit("quiz:ranking-player", p);
+            });
         }
     };
 
@@ -151,4 +168,5 @@ export default function (
     socket.on("quiz:countdown", changeCountdown);
     socket.on("quiz:stop-countdown", stopCountdown);
     socket.on("quiz-player:send-answer", sendAnswerPlayer);
+    socket.on("quiz:show-ranking-player", showRankingPlayer);
 }
