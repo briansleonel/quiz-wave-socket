@@ -105,17 +105,22 @@ export default function (
 
         // verifico que se encuentre la sala
         if (roomFound && socket.data.role === "moderator") {
+            // numero de preguntas realizadas
+            const numQuestion = roomFound.currentQuestion + 1;
+
+            // verifico si hay un jugador que no llego a responder las preguntas
+            roomFound.players.forEach((p) => {
+                if (p.answers.length < numQuestion) {
+                    p.answers.push(false);
+                }
+            });
+
             // emito el evento que se ha finalizado el contador a todos los jugadores
             roomFound.players.forEach((p) => {
                 socket.to(p.socketId).emit("quiz:countdown-stopped");
             });
 
-            // Ordeno los jugadores de forma descendente de acuerdo a su SCORE
-            roomFound.players.sort((a, b) =>
-                a.score < b.score ? 1 : a.score > b.score ? -1 : 0
-            );
-
-            socket.emit("quiz:ranking-moderator", roomFound.players);
+            //socket.emit("quiz:ranking-moderator", roomFound.players);
         }
     };
 
@@ -149,6 +154,23 @@ export default function (
     };
 
     /**
+     * Evento que permite enviar el ranking de los jugadores al moderador
+     */
+    const getRankingModerator = () => {
+        const roomFound = rooms.find((r) => r.code == socket.data.code);
+
+        // verifico que se encuentre la sala
+        if (roomFound && socket.data.role === "moderator") {
+            // Ordeno los jugadores de forma descendente de acuerdo a su SCORE
+            roomFound.players.sort((a, b) =>
+                a.score < b.score ? 1 : a.score > b.score ? -1 : 0
+            );
+
+            socket.emit("quiz:ranking-moderator", roomFound.players);
+        }
+    };
+
+    /**
      * Permite escuchar el evento cuando el moderator indica que puede mostrar su score a cada participante
      */
     const showRankingPlayer = () => {
@@ -168,5 +190,6 @@ export default function (
     socket.on("quiz:countdown", changeCountdown);
     socket.on("quiz:stop-countdown", stopCountdown);
     socket.on("quiz-player:send-answer", sendAnswerPlayer);
+    socket.on("quiz:get-ranking-moderator", getRankingModerator);
     socket.on("quiz:show-ranking-player", showRankingPlayer);
 }
