@@ -200,6 +200,10 @@ export default function (
                     roomFound.hasNext,
                     roomFound.currentQuestion
                 );
+
+                roomFound.players.forEach((p) => {
+                    socket.to(p.socketId).emit("quiz:next-question-player");
+                });
             }
         }
     };
