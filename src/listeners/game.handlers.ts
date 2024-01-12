@@ -24,7 +24,7 @@ export default function (
             roomFound.status = "started"; // etsablezco el estado de la sala en "started"
             roomFound.currentQuestion = 0;
             roomFound.hasNext =
-                roomFound.questions.length < roomFound.currentQuestion + 1;
+                roomFound.questions.length > roomFound.currentQuestion + 1;
 
             // emito el evento que se ha iniciado el juego a todos los jugadores
             roomFound.players.forEach((p) => {
@@ -184,6 +184,26 @@ export default function (
         }
     };
 
+    const nextQuestion = () => {
+        const roomFound = rooms.find((r) => r.code == socket.data.code);
+
+        // verifico que se encuentre la sala
+        if (roomFound && socket.data.role === "moderator") {
+            // Verifico que aún se encuentren preguntas
+            if (roomFound.hasNext) {
+                roomFound.currentQuestion += 1;
+                roomFound.hasNext =
+                    roomFound.questions.length > roomFound.currentQuestion + 1;
+
+                socket.emit(
+                    "quiz:next-question",
+                    roomFound.hasNext,
+                    roomFound.currentQuestion
+                );
+            }
+        }
+    };
+
     socket.on("quiz:start", startGame);
     socket.on("quiz:show-question", quizShowQuestion);
     socket.on("quiz:show-options", quizShowOptions);
@@ -192,4 +212,5 @@ export default function (
     socket.on("quiz-player:send-answer", sendAnswerPlayer);
     socket.on("quiz:get-ranking-moderator", getRankingModerator);
     socket.on("quiz:show-ranking-player", showRankingPlayer);
+    socket.on("quiz:next-question", nextQuestion);
 }
