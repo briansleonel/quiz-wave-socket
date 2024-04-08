@@ -26,6 +26,7 @@ export interface ServerEvents {
     "quiz:ranking-player": (player: Player) => void;
     "quiz:next-question": (hasNext: boolean, currentQuestion: number) => void;
     "quiz:next-question-player": () => void;
+    "quiz:all-players-responded": () => void;
 }
 
 export interface ClientEvents {
