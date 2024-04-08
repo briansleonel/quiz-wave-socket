@@ -16,6 +16,7 @@ export interface ServerEvents {
     "room:error": (message: string) => void;
     "room:room-exists": (exists: boolean) => void;
     "room:player-disconnected": (player: Player) => void;
+    "room:closed-room": () => void;
     "player:joined-room": (player: Player) => void;
     "quiz:started": () => void;
     "quiz:show-question": (question: string) => void;
@@ -33,6 +34,7 @@ export interface ClientEvents {
     hello: () => void;
     "room:create": (questions: Array<ICollectionQuestion>) => void;
     "room:check-exists": (code: number) => void;
+    "room:close-room": (code: number) => void;
     "player:join-room": (code: number, playername: string) => void;
     "quiz:start": () => void;
     "quiz:show-question": () => void;
