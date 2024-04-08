@@ -51,6 +51,21 @@ export default function (
         }
     };
 
+    const closeRoom = (code: number) => {
+        const roomFound = rooms.find((r) => r.code == code);
+
+        if (roomFound) {
+            rooms = rooms.filter((room) => room.code !== code);
+
+            roomFound.players.forEach((p) => {
+                socket.to(p.socketId).emit("room:closed-room");
+            });
+        }
+
+        console.log(rooms);
+    };
+
     socket.on("room:create", createRoom);
     socket.on("room:check-exists", checkRoomExists);
+    socket.on("room:close-room", closeRoom);
 }
