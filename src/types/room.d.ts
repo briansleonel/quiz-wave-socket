@@ -10,4 +10,5 @@ export interface Room {
     currentQuestion: number;
     questions: Array<ICollectionQuestion>;
     hasNext: boolean;
+    totalAnswers: number;
 }
