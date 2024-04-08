@@ -146,10 +146,18 @@ export default function (
                     if (currentQuestion.correct === index) {
                         p.score += countown;
                     }
+
+                    // incremento el total de jugadores que respondieron
+                    roomFound.totalAnswers++;
                     return false;
                 }
                 return true;
             });
+
+            if (roomFound.totalAnswers === roomFound.players.length)
+                socket
+                    .to(roomFound.socketId)
+                    .emit("quiz:all-players-responded");
         }
     };
 
@@ -194,6 +202,7 @@ export default function (
                 roomFound.currentQuestion += 1;
                 roomFound.hasNext =
                     roomFound.questions.length > roomFound.currentQuestion + 1;
+                roomFound.totalAnswers = 0; // establezco las respuestas realizadas a 0
 
                 socket.emit(
                     "quiz:next-question",
