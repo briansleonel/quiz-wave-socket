@@ -26,11 +26,10 @@ export default function (
             currentQuestion: -1,
             questions,
             hasNext: false,
+            totalAnswers: 0,
         });
 
         socket.data = { code: codeGenerated, role: "moderator" };
-
-        console.log(rooms);
 
         // emitir al cliente el código de la sala
         socket.emit("room:created", codeGenerated, socket.id);
