@@ -8,6 +8,7 @@ import { getRandomNumber } from "../libs/generateRandomNumber";
 import { Room } from "../types/room";
 import { Socket } from "socket.io";
 import { ICollectionQuestion } from "../types/collectionQuestion";
+import checkExistRoom from "../libs/checkExistRoom";
 
 export default function (
     socket: Socket<ClientEvents, ServerEvents, InterServerEvents, SocketData>,
@@ -15,7 +16,14 @@ export default function (
 ) {
     const createRoom = (questions: Array<ICollectionQuestion>) => {
         // generar el código de la sala
-        const codeGenerated = getRandomNumber(100000, 999999);
+        let codeGenerated: number;
+        let exists: boolean = false;
+
+        // verifico que no se creeen codigos de sala repetidos
+        do {
+            codeGenerated = getRandomNumber(100000, 100004);
+            exists = checkExistRoom(rooms, codeGenerated);
+        } while (exists);
 
         // agrego la sala creada al listado de sala
         rooms.push({
